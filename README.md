@@ -1,26 +1,16 @@
-# Fun Name Visualizer
+# Go Tutorials Playground
 
-Small Go CLI that shows how computers perceive names by printing the UTF-8 bytes for each letter in both hexadecimal and binary. The companion decoder reverses the process by turning machine-friendly hex or binary back into text, highlighting how encoding schemes bridge people and computers.
+This repository hosts small Go experiments. At the moment there are two CLI tools:
 
-## Requirements
+1. **Fun Name Visualizer** (`cmd/visualizer`): shows the hex and binary representation of each letter in a name and decodes byte streams back to UTF-8.
+2. **Simple TCP Echo Server** (`cmd/echo`): minimalist server that echoes whatever clients send, handy for networking demos.
 
-- Go 1.24+ (uses only the standard library)
+Both binaries use only the Go standard library (tested with Go 1.24+).
 
-## Getting Started
-
-```bash
-cd /path/to/go_tutorials
-go run . help
-```
-
-## Commands
-
-### `see`
-
-Show the byte-level representation for each letter in a name.
+## Running the Visualizer
 
 ```bash
-go run . see --name "Ada Lovelace"
+go run ./cmd/visualizer see --name "Ada Lovelace"
 ```
 
 Sample output:
@@ -39,23 +29,40 @@ Letter           UTF-8 Hex Bytes        Binary Bytes
 ...
 ```
 
-### `decode`
-
-Convert a stream of bytes (hexadecimal or binary) back to UTF-8 text. The hex mode accepts prefixes (`0x`) and both spaced or continuous strings.
+Decode hex or binary back to text:
 
 ```bash
 # Hex input (bytes can be spaced or continuous)
-go run . decode --hex "41 73 68"
-go run . decode --hex "417368"
+go run ./cmd/visualizer decode --hex "41 73 68"
+go run ./cmd/visualizer decode --hex "417368"
 
 # Binary input (space-separated 8-bit chunks)
-go run . decode --bin "01000001 01110011 01101000"
+go run ./cmd/visualizer decode --bin "01000001 01110011 01101000"
 ```
 
-Invalid UTF-8 sequences trigger a warning but are still displayed with Go's best-effort decoding.
+Invalid UTF-8 sequences trigger a warning but still print with Go's best-effort decoding.
 
-## Tips
+## Running the Echo Server
 
-- Use `go build` to create a static binary if you want to share the program: `go build -o funname .`
-- Pipe output into `less` when trying long names or multi-line hex input.
-- Modify `printUsage` in `main.go` if you add new subcommands or flags.
+```bash
+go run ./cmd/echo --addr :9000
+```
+
+Then connect from another terminal (or `nc`):
+
+```bash
+nc localhost 9000
+hello world
+hello world
+```
+
+Every message you type is sent straight back, making it easy to inspect TCP traffic.
+
+## Building Binaries
+
+```bash
+go build -o bin/visualizer ./cmd/visualizer
+go build -o bin/echo ./cmd/echo
+```
+
+Feel free to add more tools under `cmd/<your-tool>` and keep shared helpers under `internal/` if needed.
