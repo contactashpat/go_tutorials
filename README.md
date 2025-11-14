@@ -2,7 +2,7 @@
 
 This repository hosts small Go experiments. At the moment there are two CLI tools:
 
-1. **Fun Name Visualizer** (`cmd/visualizer`): shows each character’s code point (decimal and hex) plus the UTF-8 bytes (hex and binary) and decodes byte streams back to UTF-8.
+1. **Fun Name Visualizer** (`cmd/visualizer`): shows each character’s code point (decimal and hex), HTML entities, and UTF-8 bytes (hex/dec/binary) and decodes byte streams back to UTF-8.
 2. **Simple TCP Echo Server** (`cmd/echo`): minimalist server that echoes whatever clients send, handy for networking demos.
 
 Both binaries use only the Go standard library (tested with Go 1.24+).
@@ -19,13 +19,13 @@ Sample output:
 Name: Ada Lovelace
 This is how a computer represents your name byte-by-byte:
 
-Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Binary Bytes
---------------  -----------------  ----------------  --------------------  ------------------------------
-'A'             65                  U+0041           0x41                  01000001
-'d'             100                 U+0064           0x64                  01100100
-'a'             97                  U+0061           0x61                  01100001
-' '             32                  U+0020           0x20                  00100000
-'L'             76                  U+004C           0x4C                  01001100
+Letter           Code Point (dec)  Code Point (hex)  HTML Entity (dec)  HTML Entity (hex)  UTF-8 Hex Bytes        UTF-8 Dec Bytes        Binary Bytes
+--------------  -----------------  ----------------  ------------------  ------------------  --------------------  ---------------------  ------------------------------
+'A'             65                 U+0041            &#65;               &#x0041;            0x41                  65                     01000001
+'d'             100                U+0064            &#100;             &#x0064;            0x64                  100                    01100100
+'a'             97                 U+0061            &#97;              &#x0061;            0x61                  97                     01100001
+' '             32                 U+0020            &#32;              &#x0020;            0x20                  32                     00100000
+'L'             76                 U+004C            &#76;              &#x004C;            0x4C                  76                     01001100
 ...
 ```
 
@@ -33,7 +33,8 @@ Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Bina
 
 - **Code Point (dec)**: Unicode scalar value in base 10 (what `rune` represents).
 - **Code Point (hex)**: Same value in the canonical `U+XXXX` notation.
-- **UTF-8 Hex Bytes** / **Binary Bytes**: How UTF-8 encodes that rune at the byte level.
+- **HTML Entity (dec/hex)**: Ready-to-use HTML entity escape sequences.
+- **UTF-8 Hex Bytes / UTF-8 Dec Bytes / Binary Bytes**: How UTF-8 encodes that rune at the byte level.
 
 Decode hex or binary back to text:
 

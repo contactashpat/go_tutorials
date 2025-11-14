@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"go_tutorials/internal/visualiser"
 )
 
 func main() {
@@ -58,25 +60,24 @@ func runSee(args []string) error {
 	fmt.Printf("Name: %s\n", name)
 	fmt.Println("This is how a computer represents your name byte-by-byte:")
 	fmt.Println()
-	fmt.Println("Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Binary Bytes")
-	fmt.Println("--------------  -----------------  ----------------  --------------------  ------------------------------")
+	results, err := visualiser.AnalyseString(name)
+	if err != nil {
+		return err
+	}
 
-	for _, r := range name {
-		bytes := []byte(string(r))
-		hexParts := make([]string, len(bytes))
-		binParts := make([]string, len(bytes))
+	fmt.Println("Letter           Code Point (dec)  Code Point (hex)  HTML Entity (dec)  HTML Entity (hex)  UTF-8 Hex Bytes        UTF-8 Dec Bytes        Binary Bytes")
+	fmt.Println("--------------  -----------------  ----------------  ------------------  ------------------  --------------------  ---------------------  ------------------------------")
 
-		for i, b := range bytes {
-			hexParts[i] = fmt.Sprintf("0x%02X", b)
-			binParts[i] = fmt.Sprintf("%08b", b)
-		}
-
-		fmt.Printf("%-14q  %-17d  %-16s  %-20s  %s\n",
-			r,
-			int(r),
-			fmt.Sprintf("U+%04X", r),
-			strings.Join(hexParts, " "),
-			strings.Join(binParts, " "),
+	for _, res := range results {
+		fmt.Printf("%-14s  %-17d  %-16s  %-18s  %-18s  %-20s  %-21s  %s\n",
+			res.Character,
+			res.CodePointDec,
+			res.CodePointHex,
+			res.HTMLEntityDecimal,
+			res.HTMLEntityHex,
+			strings.Join(res.UTF8BytesHex, " "),
+			strings.Join(res.UTF8BytesDec, " "),
+			strings.Join(res.UTF8BytesBinary, " "),
 		)
 	}
 	return nil
@@ -159,7 +160,7 @@ func printDecoded(bytes []byte) {
 
 // printUsage documents available commands and sample invocations.
 func printUsage() {
-	fmt.Println(`Fun Name Visualizer
+	fmt.Print(`Fun Name Visualizer
 
 Usage:
   go run ./cmd/visualizer see --name "Ada Lovelace"
