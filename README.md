@@ -19,13 +19,13 @@ Sample output:
 Name: Ada Lovelace
 This is how a computer represents your name byte-by-byte:
 
-Letter           UTF-8 Hex Bytes        Binary Bytes
---------------  --------------------  ------------------------------
-'A'             0x41                  01000001
-'d'             0x64                  01100100
-'a'             0x61                  01100001
-' '             0x20                  00100000
-'L'             0x4C                  01001100
+Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Binary Bytes
+--------------  -----------------  ----------------  --------------------  ------------------------------
+'A'             65                  U+0041           0x41                  01000001
+'d'             100                 U+0064           0x64                  01100100
+'a'             97                  U+0061           0x61                  01100001
+' '             32                  U+0020           0x20                  00100000
+'L'             76                  U+004C           0x4C                  01001100
 ...
 ```
 
@@ -35,7 +35,6 @@ Decode hex or binary back to text:
 # Hex input (bytes can be spaced or continuous)
 go run ./cmd/visualizer decode --hex "41 73 68"
 go run ./cmd/visualizer decode --hex "417368"
-
 # Binary input (space-separated 8-bit chunks)
 go run ./cmd/visualizer decode --bin "01000001 01110011 01101000"
 ```

@@ -58,8 +58,8 @@ func runSee(args []string) error {
 	fmt.Printf("Name: %s\n", name)
 	fmt.Println("This is how a computer represents your name byte-by-byte:")
 	fmt.Println()
-	fmt.Println("Letter           UTF-8 Hex Bytes        Binary Bytes")
-	fmt.Println("--------------  --------------------  ------------------------------")
+	fmt.Println("Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Binary Bytes")
+	fmt.Println("--------------  -----------------  ----------------  --------------------  ------------------------------")
 
 	for _, r := range name {
 		bytes := []byte(string(r))
@@ -71,8 +71,10 @@ func runSee(args []string) error {
 			binParts[i] = fmt.Sprintf("%08b", b)
 		}
 
-		fmt.Printf("%-14q  %-20s  %s\n",
+		fmt.Printf("%-14q  %-17d  %-16s  %-20s  %s\n",
 			r,
+			int(r),
+			fmt.Sprintf("U+%04X", r),
 			strings.Join(hexParts, " "),
 			strings.Join(binParts, " "),
 		)
