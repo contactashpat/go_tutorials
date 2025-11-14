@@ -2,7 +2,7 @@
 
 This repository hosts small Go experiments. At the moment there are two CLI tools:
 
-1. **Fun Name Visualizer** (`cmd/visualizer`): shows the hex and binary representation of each letter in a name and decodes byte streams back to UTF-8.
+1. **Fun Name Visualizer** (`cmd/visualizer`): shows each character’s code point (decimal and hex) plus the UTF-8 bytes (hex and binary) and decodes byte streams back to UTF-8.
 2. **Simple TCP Echo Server** (`cmd/echo`): minimalist server that echoes whatever clients send, handy for networking demos.
 
 Both binaries use only the Go standard library (tested with Go 1.24+).
@@ -28,6 +28,12 @@ Letter           Code Point (dec)  Code Point (hex)  UTF-8 Hex Bytes        Bina
 'L'             76                  U+004C           0x4C                  01001100
 ...
 ```
+
+### Understanding the Columns
+
+- **Code Point (dec)**: Unicode scalar value in base 10 (what `rune` represents).
+- **Code Point (hex)**: Same value in the canonical `U+XXXX` notation.
+- **UTF-8 Hex Bytes** / **Binary Bytes**: How UTF-8 encodes that rune at the byte level.
 
 Decode hex or binary back to text:
 
