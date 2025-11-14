@@ -160,9 +160,9 @@ func printUsage() {
 	fmt.Println(`Fun Name Visualizer
 
 Usage:
-  go run . see --name "Ada Lovelace"
-  go run . decode --hex "41 64 61"
-  go run . decode --bin "01000001 01100100 01100001"
+  go run ./cmd/visualizer see --name "Ada Lovelace"
+  go run ./cmd/visualizer decode --hex "41 64 61"
+  go run ./cmd/visualizer decode --bin "01000001 01100100 01100001"
 
 Commands:
   see      Show the hex and binary representation of every letter in a name.
