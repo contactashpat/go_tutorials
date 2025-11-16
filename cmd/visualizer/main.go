@@ -13,21 +13,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	var err error
-	switch os.Args[1] {
-	case "see":
-		err = NewSeeCommand().Run(os.Args[2:])
-	case "decode":
-		err = NewDecodeCommand().Run(os.Args[2:])
-	case "help", "-h", "--help":
+	name := os.Args[1]
+	if name == "help" || name == "-h" || name == "--help" {
 		printUsage()
 		return
-	default:
-		printUsage()
-		os.Exit(1)
 	}
 
-	if err != nil {
+	if err := dispatchCommand(name, os.Args[2:]); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
 	}

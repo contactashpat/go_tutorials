@@ -21,12 +21,12 @@
 - [x] Test CLI tool manually and via simple script
 
 ### Stage 3: HTTP API backend
-- [ ] Create `internal/web/handlers.go` and setup HTTP server
-- [ ] `GET /` handler: serve placeholder page (or simple home)
-- [ ] `POST /api/visualise` handler: accept JSON request → call `AnalyseString` (or reverse) → respond JSON
-- [ ] Define JSON request/response schema
-- [ ] Write integration test (e.g., using `httptest`): send request → verify response fields and values
-- [ ] Run HTTP server locally (e.g., port 8080) and test with curl/Postman
+- [x] Create `internal/web/handlers.go` and setup HTTP server
+- [x] `GET /` handler: serve placeholder page (or simple home)
+- [x] `POST /api/visualise` handler: accept JSON request → call `AnalyseString` (or reverse) → respond JSON
+- [x] Define JSON request/response schema
+- [x] Write integration test (e.g., using `httptest`): send request → verify response fields and values
+- [x] Run HTTP server locally (e.g., port 8080) and test with curl/Postman
 
 ### Stage 4: Front-end web UI
 - [ ] Create HTML template `internal/web/templates/index.html`

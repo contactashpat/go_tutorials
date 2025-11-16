@@ -13,7 +13,9 @@ Usage:
   go run ./cmd/visualizer decode --bin "01000001 01100100 01100001"
 
 Commands:
-  see      Show the hex and binary representation of every letter in a name.
-  decode   Convert hex or binary bytes back into UTF-8 text.
+  see       Show the hex and binary representation of every letter in a name.
+  decode    Convert hex or binary bytes back into UTF-8 text.
+  serve     Launch the HTTP API server (defaults to :8080).
+  help-serve Print usage for the serve command.
 `)
 }
