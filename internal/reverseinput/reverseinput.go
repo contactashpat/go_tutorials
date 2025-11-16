@@ -1,4 +1,4 @@
-package main
+package reverseinput
 
 import (
 	"errors"
@@ -9,13 +9,15 @@ import (
 	"unicode/utf8"
 )
 
-func tokenizeReverseInput(input string) []string {
+// Tokenize splits user-provided tokens for reverse parsing.
+func Tokenize(input string) []string {
 	return strings.FieldsFunc(input, func(r rune) bool {
 		return unicode.IsSpace(r) || r == ',' || r == ';'
 	})
 }
 
-func buildStringFromCodePoints(tokens []string) (string, error) {
+// BuildStringFromCodePoints converts code point tokens into a UTF-8 string.
+func BuildStringFromCodePoints(tokens []string) (string, error) {
 	var runes []rune
 	for _, tok := range tokens {
 		val, err := parseCodePointToken(tok)
@@ -30,7 +32,8 @@ func buildStringFromCodePoints(tokens []string) (string, error) {
 	return string(runes), nil
 }
 
-func buildStringFromBytes(tokens []string) (string, error) {
+// BuildStringFromBytes converts byte tokens into a UTF-8 string.
+func BuildStringFromBytes(tokens []string) (string, error) {
 	bytes := make([]byte, len(tokens))
 	for i, tok := range tokens {
 		val, err := parseByteToken(tok)

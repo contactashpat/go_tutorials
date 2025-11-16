@@ -42,15 +42,15 @@
 - [x] Test in browser: input string → see results table
 
 ### Stage 5: Download/Export and Enhancements
-- [ ] Add UI buttons: “Download CSV”, “Download JSON”
-    - [ ] Implement backend endpoint `GET /api/download?format=csv&input=...` or front-end conversion
-- [ ] Add reverse-mode toggle in UI (to switch from string → bytes/code points)
-- [ ] Add copy-to-clipboard buttons next to each metadata field in the results table
-- [ ] Add theme toggle (dark mode/light mode)
+- [x] Add UI buttons: “Download CSV”, “Download JSON”
+    - [x] Implement backend endpoint `GET /api/download?format=csv&input=...` or front-end conversion
+- [x] Add reverse-mode toggle in UI (to switch from string → bytes/code points)
+- [x] Add copy-to-clipboard buttons next to each metadata field in the results table
+- [x] Add theme toggle (dark mode/light mode)
 - [ ] Optional: Integrate with TCP echo server
     - [ ] Allow TCP client to send string → server uses `AnalyseString` and logs/prints result
     - [ ] On web UI show recent TCP inputs and their visualisation
-- [ ] Write integration tests end-to-end (CLI + API + UI)
+- [x] Write integration tests end-to-end (CLI + API + UI)
 
 ### Stage 6: Deployment & Documentation
 - [ ] Write `README.md`: overview, setup instructions, CLI usage, API usage, UI usage, tests

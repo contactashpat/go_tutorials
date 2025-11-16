@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"go_tutorials/internal/reverseinput"
 	"go_tutorials/internal/visualiser"
 )
 
@@ -54,20 +55,20 @@ func (c *SeeCommand) resolveInput(reverseMode, input string) (string, string, er
 		return input, "", nil
 	}
 
-	tokens := tokenizeReverseInput(input)
+	tokens := reverseinput.Tokenize(input)
 	if len(tokens) == 0 {
 		return "", "", fmt.Errorf("reverse=%s requires values", reverseMode)
 	}
 
 	switch mode {
 	case "codepoint", "codepoints", "cp":
-		built, err := buildStringFromCodePoints(tokens)
+		built, err := reverseinput.BuildStringFromCodePoints(tokens)
 		if err != nil {
 			return "", "", err
 		}
 		return built, fmt.Sprintf("built from %s", reverseMode), nil
 	case "byte", "bytes":
-		built, err := buildStringFromBytes(tokens)
+		built, err := reverseinput.BuildStringFromBytes(tokens)
 		if err != nil {
 			return "", "", err
 		}
