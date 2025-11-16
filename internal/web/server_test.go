@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -20,8 +21,11 @@ func TestHomeHandler(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
 	}
-	if got := w.Body.String(); got == "" {
-		t.Fatalf("expected non-empty body")
+	if got := w.Body.String(); !strings.Contains(got, "<!DOCTYPE html>") {
+		t.Fatalf("expected HTML body, got %q", got)
+	}
+	if ct := w.Header().Get("Content-Type"); !strings.Contains(ct, "text/html") {
+		t.Fatalf("expected text/html content type, got %s", ct)
 	}
 }
 

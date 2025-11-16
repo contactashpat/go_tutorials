@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>String Visualiser</title>
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #111;
+      background-color: #f7f7f9;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      max-width: 960px;
+    }
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+    p.lede {
+      margin-top: 0;
+      color: #555;
+    }
+    form {
+      display: grid;
+      gap: 0.75rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      margin-bottom: 1.5rem;
+    }
+    label {
+      font-weight: 600;
+    }
+    textarea, input, select {
+      font: inherit;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+    button {
+      font: inherit;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #93c5fd;
+      cursor: progress;
+    }
+    .status {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status.success {
+      background: #dcfce7;
+      color: #065f46;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+      font-size: 0.95rem;
+    }
+    .results-table th,
+    .results-table td {
+      border: 1px solid #e5e7eb;
+      padding: 0.45rem;
+      text-align: left;
+    }
+    .results-table th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>String Visualiser</h1>
+    <p class="lede">Inspect every rune in your input and see the UTF-8 bytes, code points, and HTML entities.</p>
+  </header>
+
+  <form id="visualise-form">
+    <div>
+      <label for="input-text">Input text</label>
+      <textarea id="input-text" name="input" rows="3" placeholder="Try emoji or mixed-language strings"></textarea>
+      <small>Enter the string you want to analyse. Reverse/byte parsing will arrive in later stages.</small>
+    </div>
+    <button type="submit">Visualise</button>
+  </form>
+
+  <div id="status" class="status hidden"></div>
+
+  <section id="results-section" class="hidden">
+    <h2>Results</h2>
+    <div class="table-wrapper">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Character</th>
+            <th>Code Point</th>
+            <th>UTF-8 Hex</th>
+            <th>UTF-8 Dec</th>
+            <th>UTF-8 Binary</th>
+            <th>HTML Entities</th>
+          </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('visualise-form');
+    const inputText = document.getElementById('input-text');
+    const statusBox = document.getElementById('status');
+    const resultsSection = document.getElementById('results-section');
+    const resultsBody = document.getElementById('results-body');
+
+    const setStatus = (message, type = 'info') => {
+      if (!message) {
+        statusBox.classList.add('hidden');
+        statusBox.textContent = '';
+        return;
+      }
+      statusBox.textContent = message;
+      statusBox.className = 'status';
+      if (type === 'error') {
+        statusBox.classList.add('error');
+      } else if (type === 'success') {
+        statusBox.classList.add('success');
+      }
+      statusBox.classList.remove('hidden');
+    };
+
+    const renderResults = (items) => {
+      resultsBody.innerHTML = '';
+      if (items.length === 0) {
+        resultsSection.classList.add('hidden');
+        return;
+      }
+      items.forEach((item) => {
+        const row = document.createElement('tr');
+        const htmlEntities = item.HTMLEntityDecimal + ' / ' + item.HTMLEntityHex;
+        const utf8Hex = item.UTF8BytesHex.join(', ');
+        const utf8Dec = item.UTF8BytesDec.join(', ');
+        const utf8Bin = item.UTF8BytesBinary.join(', ');
+
+        row.innerHTML = `
+          <td>${item.Character}</td>
+          <td>${item.CodePointHex}<br><small>Dec ${item.CodePointDec}</small></td>
+          <td>${utf8Hex}</td>
+          <td>${utf8Dec}</td>
+          <td>${utf8Bin}</td>
+          <td>${htmlEntities}</td>
+        `;
+        resultsBody.appendChild(row);
+      });
+      resultsSection.classList.remove('hidden');
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const value = inputText.value.trim();
+      if (!value) {
+        setStatus('Please enter text to visualise.', 'error');
+        resultsSection.classList.add('hidden');
+        return;
+      }
+      form.querySelector('button').disabled = true;
+      setStatus('Analyzing...');
+      try {
+        const response = await fetch('/api/visualise', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input: value }),
+        });
+        if (!response.ok) {
+          const message = (await response.text()) || 'Server returned an error.';
+          throw new Error(message);
+        }
+        const data = await response.json();
+        renderResults(data.items || []);
+        setStatus(`Showing ${data.items.length} result(s).`, 'success');
+      } catch (err) {
+        renderResults([]);
+        setStatus(err.message, 'error');
+      } finally {
+        form.querySelector('button').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

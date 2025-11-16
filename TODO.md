@@ -29,17 +29,17 @@
 - [x] Run HTTP server locally (e.g., port 8080) and test with curl/Postman
 
 ### Stage 4: Front-end web UI
-- [ ] Create HTML template `internal/web/templates/index.html`
-    - [ ] Input field(s): for string and/or bytes/code points
-    - [ ] Submit button
-    - [ ] Section for displaying results table
-- [ ] Add JS logic:
-    - [ ] Capture form submission
-    - [ ] Call `POST /api/visualise`
-    - [ ] On response, build and insert results table dynamically
-- [ ] Style UI with CSS (e.g., Bootstrap or Tailwind)
-- [ ] Add validation/error-handling in the UI (e.g., empty input, invalid bytes)
-- [ ] Test in browser: input string → see results table
+- [x] Create HTML template `internal/web/templates/index.html`
+    - [x] Input field(s): for string and/or bytes/code points
+    - [x] Submit button
+    - [x] Section for displaying results table
+- [x] Add JS logic:
+    - [x] Capture form submission
+    - [x] Call `POST /api/visualise`
+    - [x] On response, build and insert results table dynamically
+- [x] Style UI with CSS (e.g., Bootstrap or Tailwind)
+- [x] Add validation/error-handling in the UI (e.g., empty input, invalid bytes)
+- [x] Test in browser: input string → see results table
 
 ### Stage 5: Download/Export and Enhancements
 - [ ] Add UI buttons: “Download CSV”, “Download JSON”

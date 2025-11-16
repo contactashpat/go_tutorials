@@ -1,18 +1,29 @@
 package web
 
 import (
+	"embed"
 	"encoding/json"
+	"html/template"
 	"net/http"
 
 	"go_tutorials/internal/visualiser"
 )
 
+//go:embed templates/index.html
+var templateFS embed.FS
+
+var indexTemplate = template.Must(template.ParseFS(templateFS, "templates/index.html"))
+
 // Server exposes HTTP handlers for the visualiser project.
-type Server struct{}
+type Server struct {
+	indexTmpl *template.Template
+}
 
 // NewServer builds a Server.
 func NewServer() *Server {
-	return &Server{}
+	return &Server{
+		indexTmpl: indexTemplate,
+	}
 }
 
 // Routes wires HTTP handlers onto the provided ServeMux.
@@ -34,8 +45,11 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	_, _ = w.Write([]byte("String Visualiser API is running. POST /api/visualise for JSON visualisations."))
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := s.indexTmpl.Execute(w, nil); err != nil {
+		http.Error(w, "failed to render template", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (s *Server) handleVisualise(w http.ResponseWriter, r *http.Request) {
