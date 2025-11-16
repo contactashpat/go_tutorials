@@ -29,6 +29,18 @@ Letter           Code Point (dec)  Code Point (hex)  HTML Entity (dec)  HTML Ent
 ...
 ```
 
+### Reverse Input Mode
+
+Feed numeric code points or raw bytes and let the tool reconstruct the text before visualising it:
+
+```bash
+# Code points in mixed formats
+go run ./cmd/visualizer see --reverse=codepoints --name "U+0041 0x0042 67"
+
+# Raw bytes (hex / binary / decimal)
+go run ./cmd/visualizer see --reverse=bytes --name "0xF0 0x9F 0x98 0x8A"
+```
+
 ### Understanding the Columns
 
 - **Code Point (dec)**: Unicode scalar value in base 10 (what `rune` represents).
@@ -69,6 +81,12 @@ Every message you type is sent straight back, making it easy to inspect TCP traf
 ```bash
 go build -o bin/visualizer ./cmd/visualizer
 go build -o bin/echo ./cmd/echo
+```
+
+To sanity-check the CLI, run the helper script with a few sample commands:
+
+```bash
+./scripts/run_visualizer_examples.sh
 ```
 
 Feel free to add more tools under `cmd/<your-tool>` and keep shared helpers under `internal/` if needed.
